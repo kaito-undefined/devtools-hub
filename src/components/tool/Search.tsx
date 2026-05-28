@@ -9,6 +9,7 @@ export default function Search() {
   const [isMac, setIsMac] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
   const containerRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setIsMac(navigator.platform.toUpperCase().indexOf("MAC") >= 0);
@@ -62,7 +63,7 @@ export default function Search() {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if ((event.metaKey || event.ctrlKey) && event.key === "k") {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
         event.preventDefault();
         inputRef.current?.focus();
         return;
@@ -106,6 +107,19 @@ export default function Search() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  useEffect(() => {
+    if (highlightedIndex >= 0 && scrollContainerRef.current) {
+      const container = scrollContainerRef.current;
+      const element = container.children[highlightedIndex] as HTMLElement;
+      if (element) {
+        element.scrollIntoView({
+          block: "nearest",
+          inline: "nearest",
+        });
+      }
+    }
+  }, [highlightedIndex]);
 
   const clearRecent = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -198,7 +212,7 @@ export default function Search() {
             )}
           </div>
 
-          <div className="max-h-[300px] overflow-y-auto custom-scrollbar">
+          <div ref={scrollContainerRef} className="max-h-[300px] overflow-y-auto custom-scrollbar">
             {displayTools.length > 0 ? (
               displayTools.map((tool, index) => (
                 <button
