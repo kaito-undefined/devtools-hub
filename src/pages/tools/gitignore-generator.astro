@@ -1,0 +1,15 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import GitignoreGenerator from "../../features/gitignore-generator/GitignoreGenerator";
+---
+
+<BaseLayout 
+  title="Gitignore Generator | Free Online Tool"
+  description="Auto Generate .gitignore files for your project. Free, fast, and fully offline-capable web developer utility. No data sent to servers."
+>
+  <h2 class="mb-6 text-2xl font-semibold">
+    .gitignore Generator
+  </h2>
+
+  <GitignoreGenerator client:load/>
+</BaseLayout>
